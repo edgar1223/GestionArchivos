@@ -1,0 +1,36 @@
+# Instalar Nginx
+sudo apt update
+sudo apt install nginx
+
+# Crear directorios
+sudo mkdir -p /var/www/cloud-storage/files
+
+# Mover archivos al directorio 'files'
+sudo mv /var/www/cloud-storage/test.txt /var/www/cloud-storage/files/
+
+# Verificar archivos
+ls -l /var/www/cloud-storage/files/
+
+# Crear archivo de configuración de Nginx en 'sites-available'
+sudo nano /etc/nginx/sites-available/cloud-storage
+server {
+    listen 80;
+    server_name 192.168.50.96;  # Asegúrate de poner la IP de tu servidor
+
+    location /files/ {
+        root /var/www/cloud-storage;  # El directorio donde se almacenan los archivos
+        autoindex on;  # Habilita la visualización de directorios
+        autoindex_exact_size off;  # No mostrar el tamaño exacto de los archivos
+        autoindex_localtime on;  # Mostrar la hora local en los archivos listados
+    }
+}
+
+# Habilitar la configuración de Nginx
+sudo ln -s /etc/nginx/sites-available/cloud-storage /etc/nginx/sites-enabled/
+
+# Establecer permisos
+sudo chown -R www-data:www-data /var/www/cloud-storage/files
+sudo chmod -R 755 /var/www/cloud-storage/files
+
+# Recargar Nginx
+sudo systemctl reload nginx

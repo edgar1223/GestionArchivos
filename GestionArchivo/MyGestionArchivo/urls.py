@@ -7,20 +7,19 @@ from MyGestionArchivo import views
 from MyGestionArchivo.Vista.subirDocumento import subir
 from MyGestionArchivo.Vista.DescarArchivo import Descargar
 from MyGestionArchivo.Vista.ListarArchivos import listarArchivos
-
-router = routers.DefaultRouter()
-router.register(r'CustomUser', views.CustomUserViewSet)
-router.register(r'File', views.FileViewSet)
-router.register(r'Folder', views.FolderViewSet)
-
+from MyGestionArchivo.Vista.login import LoginAPIView ,RefreshTokenAPIView
 
 #GroupViewSet listarArchivos
-
+router = DefaultRouter()
+router.register(r'CustomUser', CustomUserViewSet, basename='usuarios')
+router.register(r'File', FileViewSet, basename='archivos')
+router.register(r'Folder', FolderViewSet, basename='carpetas')
 
 urlpatterns = [
-   path('', include(router.urls)),
+    path('', include(router.urls)),
    path('subir/file/<int:user_id>/', subir.as_view(), name='subirView'),
    path('descargar/file/<int:user_id>/', Descargar.as_view(), name='descargarView'),
-   path('listar/archivos/<int:user_id>/', listarArchivos.as_view(), name='listarArchivosView')
-
+   path('listar/archivos/<int:user_id>/', listarArchivos.as_view(), name='listarArchivosView'),
+   path('login/', LoginAPIView.as_view(), name='login'),
+   path('token/refresh/', RefreshTokenAPIView.as_view(), name='token_refresh'),
 ]

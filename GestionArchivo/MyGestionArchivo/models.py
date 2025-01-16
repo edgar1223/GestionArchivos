@@ -8,16 +8,19 @@ from django.contrib.auth.hashers import make_password
 from dotenv import load_dotenv
 import os  # Importar os para manejar variables de entorno
 import requests
+from rest_framework_simplejwt.tokens import RefreshToken
 
 class Usuario(models.Model):
     """
     Modelo de usuario completamente personalizado sin los campos de grupos ni permisos.
     """
+
     username = models.CharField(max_length=150, unique=True)
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=150, blank=True)
-    email = models.EmailField(blank=True)
+    email = models.EmailField(blank=True,unique=True)
     password = models.CharField(max_length=128)  # Para almacenar la contraseña de forma segura
+    is_active = models.BooleanField(default=True)
     encryption_key = models.CharField(
         max_length=64,
         editable=False,
@@ -52,12 +55,25 @@ class Usuario(models.Model):
                 # Si tiene contenido, realizar alguna acción
                 self.name_folder = self.username + "_" + self.first_name + "_" + self.email
         super().save(*args, **kwargs)
-
+    @property
+    def is_authenticated(self):
+        return True
+    
     @staticmethod
     def generate_encryption_key():
         """Genera una clave aleatoria para encriptar archivos."""
         return Fernet.generate_key().decode()
 
+    # Personalizar el payload del token
+    def get_token(self):
+        token = RefreshToken.for_user(self)
+        # Agregar datos personalizados al token
+        token['username'] = self.username
+        token['email'] = self.email
+        token['first_name'] = self.first_name
+        token['last_name'] = self.last_name
+        token['id']=self.id
+        return token
     def __str__(self):
         return f"{self.username} ({self.first_name} {self.last_name})"
 

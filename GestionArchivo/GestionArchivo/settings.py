@@ -14,6 +14,7 @@ from pathlib import Path
 import datetime
 import os
 from django.conf import settings
+from datetime import timedelta
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -42,10 +43,14 @@ INSTALLED_APPS = [
     'MyGestionArchivo.apps.MygestionarchivoConfig',
      'rest_framework',
      'coreapi',
+     'rest_framework_simplejwt',
+     
 ]
 REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
-    
+        'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+         'DEFAULT_AUTHENTICATION_CLASSES': (
+        'MyGestionArchivo.authentication.CustomJWTAuthentication',
+    ),
 }
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -93,7 +98,15 @@ DATABASES = {
     }
 }
 
-
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),  # Duración del token de acceso (15 minutos)
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),    # Duración del token de refresco (7 días)
+    'ROTATE_REFRESH_TOKENS': True,                  # Si es True, se genera un nuevo refresh token con cada solicitud de refresco
+    'BLACKLIST_AFTER_ROTATION': True,               # Si es True, los antiguos refresh tokens se invalidan
+    'ALGORITHM': 'HS256',                           # Algoritmo para firmar los tokens (por defecto: HS256)
+    'SIGNING_KEY': 'your-secret-key',               # Clave secreta para firmar los tokens (opcional, usa la de Django por defecto)
+    'AUTH_HEADER_TYPES': ('Bearer',),              # Prefijo para los tokens en la cabecera (por defecto: Bearer)
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

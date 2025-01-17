@@ -86,6 +86,7 @@ Django se encarga de manejar la lógica de negocio y la interacción con los usu
 ```bash
 python3 -m venv venv
 source venv/bin/activate  
+pip install -r requirements.txt
 pip install django djangorestframework cryptography python-dotenv
 ```
 

@@ -8,8 +8,9 @@ from MyGestionArchivo.Vista.subirDocumento import subir
 from MyGestionArchivo.Vista.DescarArchivo import Descargar
 from MyGestionArchivo.Vista.ListarArchivos import listarArchivos
 from MyGestionArchivo.Vista.login import LoginAPIView ,RefreshTokenAPIView
+from MyGestionArchivo.Vista.detalleArchivo import deteallesArchivo
 
-#GroupViewSet listarArchivos
+#GroupViewSet deteallesArchivo
 router = DefaultRouter()
 router.register(r'CustomUser', CustomUserViewSet, basename='usuarios')
 router.register(r'File', FileViewSet, basename='archivos')
@@ -22,4 +23,6 @@ urlpatterns = [
    path('listar/archivos/<int:user_id>/', listarArchivos.as_view(), name='listarArchivosView'),
    path('login/', LoginAPIView.as_view(), name='login'),
    path('token/refresh/', RefreshTokenAPIView.as_view(), name='token_refresh'),
+      path('detalle/archivo/<int:user_id>/', deteallesArchivo.as_view(), name='detalle_Archivo'),
+
 ]

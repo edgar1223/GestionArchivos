@@ -45,8 +45,16 @@ class listarArchivos(APIView):
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
             # Procesar y devolver la lista de archivos
-            archivos = response_json.get("files", [])
-            return Response({"archivos": archivos}, status=status.HTTP_200_OK)
+            archivos = response_json.get("archivos", [])
+            carpetas = response_json.get("carpetas", [])
+
+            # Combinar los archivos y carpetas en un solo diccionario para devolver
+            resultado = {
+                "archivos": archivos,
+                "carpetas": carpetas
+            }
+
+            return Response(resultado, status=status.HTTP_200_OK)
 
         except Exception as e:
             return Response({

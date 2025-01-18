@@ -39,7 +39,7 @@ class subir(APIView):
             "path": f"{usuario.name_folder}/{carpeta}"
         }
         files = {
-            'file': ('encrypted_' + file.name, encrypted_file, 'application/octet-stream')
+            'file': ( file.name, encrypted_file, 'application/octet-stream')
         }
         
         
